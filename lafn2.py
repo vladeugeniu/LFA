@@ -1,8 +1,9 @@
-def chcek(key, word):
-    print word
-    print key
-    if len(word) is 0:
-        if key[0] in final_states:
+def check(key, word):
+   # print key
+   # print word
+    global ok
+    if len(word) is 1:
+        if (key[0],word[0]) in lafn and bool(set(lafn[key[0],word[0]]) & set(final_states)):
             ok = 1
     else:
         for state in lafn[key]:
@@ -13,11 +14,12 @@ def chcek(key, word):
 
 lafn = {}
 f = open("LNFA.in", "r")
+g = open("LNFA.out", "w")
 date_in = f.readlines()
 
 states = date_in[1]
 symbols = date_in[3]
-init_state = date_in[4]
+init_state = date_in[4][:-1]
 final_states = date_in[6]
 nr_transition = int(date_in[7])
 
@@ -30,18 +32,18 @@ for line in date_in[8:8+nr_transition]:
         lafn[key] = []
         lafn[key].append(line[2])
         
-print lafn
 for line in date_in[8+nr_transition +1:]:
     ok = 0
     word = line[:-1]
-    print init_state
-    print word[0]
+    #print (init_state, word[0])
+    
     if (init_state, word[0]) in lafn:
-        check((init_state, word[0]), word)
+        check((init_state, word[0]), word[1:])
     if (init_state, '.') in lafn:
-        print "here"
+        #print "cu punct"
         check((init_state, '.'), word)
+        
     if ok:
-        print "DA"
+        g.write("DA\n")
     else:
-        print "NU"
+        g.write("NU\n")
