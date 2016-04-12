@@ -1,16 +1,17 @@
 def check(key, word):
-   # print key
-   # print word
+    print key
+    print word
     global ok
-    if len(word) is 1:
-        if (key[0],word[0]) in lafn and bool(set(lafn[key[0],word[0]]) & set(final_states)):
-            ok = 1
+    if len(word) is 0:
+        if key  in final_states:
+           ok = 1
     else:
-        for state in lafn[key]:
-            if (state, word[0]) in lafn:
-                check((state, word[0]), word[1:])
-            if (state, '.') in lafn:
-                check((state, '.'), word)
+        if (key, word[0]) in lafn:
+            for state in lafn[(key, word[0])]:
+                check(state, word[1:])
+        if (key, '.') in lafn:
+            for state in lafn[(key, '.')]:
+                check(state, word)
 
 lafn = {}
 f = open("LNFA.in", "r")
@@ -31,17 +32,18 @@ for line in date_in[8:8+nr_transition]:
     else:
         lafn[key] = []
         lafn[key].append(line[2])
-        
+print states
+print lafn        
 for line in date_in[8+nr_transition +1:]:
     ok = 0
+   
     word = line[:-1]
-    #print (init_state, word[0])
     
-    if (init_state, word[0]) in lafn:
-        check((init_state, word[0]), word[1:])
-    if (init_state, '.') in lafn:
-        #print "cu punct"
-        check((init_state, '.'), word)
+    #print (init_state, word[0])
+   
+   
+    check(init_state, word)
+ 
         
     if ok:
         g.write("DA\n")
